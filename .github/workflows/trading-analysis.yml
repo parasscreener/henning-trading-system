@@ -8,6 +8,12 @@ on:
   push:
     branches: [ main ]
 
+# Add permissions for the workflow
+permissions:
+  contents: write  # Allow writing to repository contents
+  actions: read    # Allow reading actions
+  issues: write    # Allow creating issues if needed
+
 jobs:
   trading-analysis:
     runs-on: ubuntu-latest
@@ -15,6 +21,9 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
+      with:
+        # Use a token with write permissions
+        token: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Set up Python
       uses: actions/setup-python@v4
@@ -40,20 +49,59 @@ jobs:
         echo "Current time in IST: $(date)"
         python henning_trading_system.py
 
-    - name: Upload analysis results
-      uses: actions/upload-artifact@v4
+    - name: Upload analysis results as artifacts
+      uses: actions/upload-artifact@v3
       with:
-        name: trading-analysis-results
+        name: trading-analysis-results-${{ github.run_number }}
         path: |
           *.csv
           *.json
           *.html
         retention-days: 30
 
+    # OPTION 1: Commit results back to repo (if you want this feature)
     - name: Commit and push results (optional)
+      if: success() && github.ref == 'refs/heads/main'
       run: |
-        git config --local user.email "action@github.com"
-        git config --local user.name "GitHub Action"
-        git add *.csv *.json || true
-        git commit -m "🤖 Daily trading analysis: $(date '+%Y-%m-%d %H:%M IST')" || true
-        git push || true
+        # Configure git with GitHub Actions bot
+        git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+        git config --local user.name "github-actions[bot]"
+
+        # Add timestamp to avoid conflicts
+        TIMESTAMP=$(date '+%Y%m%d_%H%M%S')
+
+        # Create results directory if it doesn't exist
+        mkdir -p daily_results/$TIMESTAMP
+
+        # Move CSV files to dated directory
+        if ls *.csv 1> /dev/null 2>&1; then
+          mv *.csv daily_results/$TIMESTAMP/
+        fi
+
+        # Move JSON files to dated directory  
+        if ls *.json 1> /dev/null 2>&1; then
+          mv *.json daily_results/$TIMESTAMP/
+        fi
+
+        # Add files if any exist
+        if [ -n "$(git status --porcelain)" ]; then
+          git add daily_results/
+          git commit -m "🤖 Daily trading analysis: $(date '+%Y-%m-%d %H:%M IST')" || echo "No changes to commit"
+          git push || echo "Push failed - continuing anyway"
+        else
+          echo "No new results to commit"
+        fi
+
+    # OPTION 2: Create a summary issue instead of committing files
+    - name: Create results summary issue (alternative)
+      if: failure() && steps.*.conclusion == 'failure'
+      uses: actions/github-script@v6
+      with:
+        script: |
+          const date = new Date().toLocaleDateString('en-IN', {timeZone: 'Asia/Kolkata'});
+          await github.rest.issues.create({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            title: `🚨 Trading Analysis Failed - ${date}`,
+            body: `The Grant Henning trading analysis failed on ${date}. Please check the workflow logs for details.`
+          });
