@@ -1,0 +1,59 @@
+name: Grant Henning Trading System - Daily Analysis
+
+on:
+  schedule:
+    # Runs every weekday at 10:00 AM New Delhi Time (04:30 AM UTC)
+    - cron: '30 4 * * 1-5'
+  workflow_dispatch:  # Allows manual triggering
+  push:
+    branches: [ main ]
+
+jobs:
+  trading-analysis:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+
+    - name: Set up timezone
+      run: |
+        sudo timedatectl set-timezone Asia/Kolkata
+
+    - name: Run Grant Henning Trading Analysis
+      env:
+        SENDER_EMAIL: ${{ secrets.SENDER_EMAIL }}
+        SENDER_PASSWORD: ${{ secrets.SENDER_APP_PASSWORD }}
+        RECIPIENT_EMAIL: paras.m.parmar@gmail.com
+      run: |
+        echo "🚀 Starting Grant Henning Trading System Analysis..."
+        echo "Current time in IST: $(date)"
+        python henning_trading_system.py
+
+    - name: Upload analysis results
+      uses: actions/upload-artifact@v3
+      with:
+        name: trading-analysis-results
+        path: |
+          *.csv
+          *.json
+          *.html
+        retention-days: 30
+
+    - name: Commit and push results (optional)
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add *.csv *.json || true
+        git commit -m "🤖 Daily trading analysis: $(date '+%Y-%m-%d %H:%M IST')" || true
+        git push || true
