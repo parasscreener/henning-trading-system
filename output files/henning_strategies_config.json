@@ -1,0 +1,153 @@
+{
+  "Grant_Henning_Trading_Strategies": {
+    "Strategy_1_Technical_Momentum": {
+      "name": "Growth-Momentum Technical System",
+      "asset_class": "Nifty 50 Stocks",
+      "timeframe": "Daily with Monthly Rebalancing",
+      "description": "Focuses on stocks with strong price momentum and growth characteristics",
+      "qualifying_variables": {
+        "minimum_price": 5.0,
+        "average_volume": 100000,
+        "market_cap": "Above \u20b9500 crore"
+      },
+      "technical_indicators": {
+        "momentum_index_1m": "Price gain over past 1 month",
+        "momentum_index_12m": "Price gain over past 12 months",
+        "cumulative_momentum_index": "Combined 1m + 12m momentum",
+        "price_movement_index": "PMI based on 52-week high/low patterns",
+        "volume_confirmation": "Above average volume on breakouts",
+        "proximity_to_high": "Distance from 52-week high"
+      },
+      "entry_rules": {
+        "primary": "Rank stocks by Cumulative Momentum Index (CMI)",
+        "condition_1": "Stock must be in top 20% of momentum rankings",
+        "condition_2": "Price above 50-day moving average",
+        "condition_3": "Volume above 20-day average",
+        "condition_4": "Positive 1-month and 12-month momentum",
+        "position_size": "Equal weight top 10 stocks"
+      },
+      "exit_rules": {
+        "stop_loss": "8% below entry price",
+        "profit_target": "15% above entry price or when momentum turns negative",
+        "time_stop": "Hold maximum 3 months",
+        "momentum_exit": "Exit when CMI drops below 0 or stock falls out of top 30%"
+      },
+      "risk_management": {
+        "max_position": "10% per stock",
+        "portfolio_stop": "15% drawdown from peak",
+        "sector_limit": "Maximum 40% in any single sector"
+      },
+      "rebalancing": "Monthly on last trading day"
+    },
+    "Strategy_2_Fundamental_Value": {
+      "name": "Fundamental-Value System",
+      "asset_class": "Nifty 200 Stocks",
+      "timeframe": "Weekly analysis with Quarterly Rebalancing",
+      "description": "Selects undervalued stocks with strong fundamentals",
+      "qualifying_variables": {
+        "minimum_price": 10.0,
+        "market_cap": "Above \u20b91000 crore",
+        "trading_volume": "Adequate liquidity"
+      },
+      "fundamental_indicators": {
+        "pe_ratio": "Price-to-Earnings below sector average",
+        "book_value": "Price-to-Book ratio < 2.5",
+        "earnings_growth": "Positive EPS growth over 3 years",
+        "eps_pe_divergence": "EPS growth vs PE ratio analysis",
+        "cash_flow": "Positive free cash flow",
+        "debt_equity": "D/E ratio below 0.8",
+        "roe": "Return on Equity > 15%",
+        "current_ratio": "Above 1.2"
+      },
+      "entry_rules": {
+        "primary": "Score stocks on fundamental metrics",
+        "condition_1": "Composite fundamental score in top 25%",
+        "condition_2": "PE ratio below historical average",
+        "condition_3": "Earnings growth > 15% CAGR",
+        "condition_4": "Strong balance sheet metrics",
+        "position_size": "Equal weight top 15 stocks"
+      },
+      "exit_rules": {
+        "value_target": "When stock reaches fair value (PE at sector average)",
+        "fundamental_deterioration": "Exit if key metrics worsen significantly",
+        "time_limit": "Review every quarter, hold up to 2 years",
+        "stop_loss": "20% below entry price"
+      },
+      "risk_management": {
+        "max_position": "7% per stock",
+        "diversification": "Minimum 10 different sectors",
+        "quality_filter": "Only investment grade companies"
+      },
+      "rebalancing": "Quarterly review with tactical adjustments"
+    },
+    "Strategy_3_Hybrid_Technical_Fundamental": {
+      "name": "Technical-Fundamental Hybrid System",
+      "asset_class": "Nifty 100 + Midcap 50",
+      "timeframe": "Daily monitoring with Bi-weekly Rebalancing",
+      "description": "Combines best of both momentum and value approaches",
+      "qualifying_variables": {
+        "minimum_price": 8.0,
+        "average_volume": 50000,
+        "market_cap": "Above \u20b9750 crore"
+      },
+      "phase_1_technical": {
+        "momentum_score": "12-month price momentum",
+        "relative_strength": "Stock vs Nifty performance",
+        "trend_strength": "ADX indicator > 25",
+        "volume_trend": "OBV (On-Balance Volume) confirmation"
+      },
+      "phase_2_point_figure": {
+        "chart_pattern": "Point & Figure bullish patterns",
+        "support_resistance": "Key level identification",
+        "trend_direction": "Column direction analysis"
+      },
+      "phase_3_technical_ratings": {
+        "macd_signal": "MACD bullish crossover",
+        "rsi_momentum": "RSI between 40-70 range",
+        "moving_averages": "Price above 20, 50, 200 EMA",
+        "bollinger_position": "Within upper half of bands"
+      },
+      "phase_4_fundamental": {
+        "pe_reasonable": "PE ratio not excessive for growth",
+        "earnings_quality": "Consistent earnings growth",
+        "cash_generation": "Strong operating cash flow",
+        "competitive_position": "Market leadership in sector"
+      },
+      "entry_rules": {
+        "primary": "Must pass all 4 phases with minimum scores",
+        "technical_score": "Minimum 70/100 on technical metrics",
+        "fundamental_score": "Minimum 60/100 on fundamental metrics",
+        "combined_rank": "Top 12 stocks in combined scoring",
+        "confirmation": "Both momentum and value signals aligned"
+      },
+      "exit_rules": {
+        "technical_deterioration": "Technical score drops below 40",
+        "fundamental_change": "Major fundamental deterioration",
+        "relative_weakness": "Underperforms Nifty by 15% over 3 months",
+        "profit_booking": "25% gains with weakening momentum"
+      },
+      "risk_management": {
+        "position_sizing": "Volatility-adjusted position sizing",
+        "correlation_limit": "Max 60% correlation between positions",
+        "sector_balance": "No more than 3 stocks per sector"
+      },
+      "rebalancing": "Bi-weekly screening with position adjustments"
+    }
+  },
+  "Market_Timing_System": {
+    "name": "Macro Market Timing Indicators",
+    "description": "Overall market trend analysis for strategy deployment",
+    "reliable_indicators": {
+      "nifty_200_ema": "Nifty 50 above/below 200-day EMA",
+      "advance_decline": "Nifty stocks advancing vs declining",
+      "vix_levels": "India VIX below 20 for bullish, above 30 for bearish",
+      "sectoral_rotation": "Leadership rotation analysis",
+      "institutional_flows": "FII/DII buying/selling patterns"
+    },
+    "market_regimes": {
+      "bull_market": "Deploy momentum strategies aggressively",
+      "bear_market": "Focus on value strategies, reduce exposure",
+      "sideways_market": "Balanced approach, shorter holding periods"
+    }
+  }
+}
